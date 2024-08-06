@@ -1,13 +1,12 @@
 package org.example.com.domain;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
+import org.example.com.repo.FindRoomRepository;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 @Data
 @NoArgsConstructor
@@ -22,13 +21,19 @@ public class ChatRoom {
     @Column(unique = true)
     private String name;
 
-    @OneToMany(fetch = FetchType.EAGER)
-    @JoinColumn(name = "chat_room_id")
-    private List<ChatUser> chatUsers = new ArrayList<>();
+    @Column(unique = true)
+    private String code;
+
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
+    @JoinColumn(name = "chatRoom_id")
+    @ToString.Exclude
+    @Builder.Default
+    private List<FindRoom> findRooms = new ArrayList<>();
 
     public static ChatRoom createRoom(String name){
         return ChatRoom.builder()
                 .name(name)
+                .code((UUID.randomUUID().toString()).replaceAll("-",""))
                 .build();
     }
 

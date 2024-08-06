@@ -1,24 +1,43 @@
 package org.example.com.service;
 
 import org.example.com.domain.ChatRoom;
-import org.example.com.domain.ChatUser;
+import org.example.com.domain.Employee;
+import org.example.com.domain.FindRoom;
 import org.example.com.repo.ChatRoomRepository;
-import org.example.com.repo.ChatUserRepository;
+import org.example.com.repo.EmployeeRepository;
+import org.example.com.repo.FindRoomRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
 public class ChatRoomService {
 
     private final ChatRoomRepository chatRoomRepository;
-    private final ChatUserRepository chatUserRepository;
+    private final EmployeeRepository employeeRepository;
+    private final FindRoomRepository findRoomRepository;
 
-    public ChatRoomService(ChatRoomRepository chatRoomRepository, ChatUserRepository chatUserRepository) {
+    public ChatRoomService(ChatRoomRepository chatRoomRepository, EmployeeRepository employeeRepository, FindRoomRepository findRoomRepository) {
         this.chatRoomRepository = chatRoomRepository;
-        this.chatUserRepository = chatUserRepository;
+        this.employeeRepository = employeeRepository;
+        this.findRoomRepository = findRoomRepository;
     }
 
+
+    // 채팅방 생성
+    public ChatRoom createChatRoom(String name, List<String> username){
+        ChatRoom room =chatRoomRepository.save(ChatRoom.createRoom(name));
+        for(String uId : username){
+            Employee employee = employeeRepository.findEmployeeByUsername(uId);
+            FindRoom findRoom = new FindRoom();
+            findRoom.setChatRoom(room);
+            findRoom.setEmployee(employee);
+            findRoomRepository.save(findRoom);
+        }
+        return room;
+    }
 
     // 채팅방 생성
     public ChatRoom createChatRoom(String name){
@@ -26,52 +45,72 @@ public class ChatRoomService {
         chatRoomRepository.save(room);
         return room;
     }
+
+
     // 이름으로 채팅방 조회
     public ChatRoom findChatRoom(Long id){
         return chatRoomRepository.findById(id).orElse(null);
     }
 
-    // 전체 채팅방 조회
-    public List<ChatRoom> getAllChatRoom(){return chatRoomRepository.findAll();}
+    // 나의 채팅방 조회
+    public List<ChatRoom> getMyChatRooms(String username){
+        Employee employee = employeeRepository.findEmployeeByUsername(username);
+        List<FindRoom> findRooms = findRoomRepository.findByEmployee(employee).orElseThrow(IllegalAccessError::new);
+        List<ChatRoom> list = new ArrayList<>();
+        findRooms.forEach(e -> {
+            list.add(e.getChatRoom());
+        });
+        return list;
+    }
+
+    // 채팅방의 사용자 조회
+    public List<Employee> getEmployeeInRoom(String code){
+        List<Employee> list = new ArrayList<>();
+        ChatRoom chatRoom = chatRoomRepository.findByCode(code)
+                .orElseThrow(RuntimeException::new);
+        List<FindRoom> findRooms = findRoomRepository.findByChatRoom(chatRoom)
+                .orElseThrow(RuntimeException::new);
+        findRooms.forEach(e -> {
+            list.add(e.getEmployee());
+        });
+
+        return list;
+    }
 
     // 채팅 방삭제
-    public void deleteChatRoom(String name){
-        ChatRoom chatRoom = chatRoomRepository.findChatRoomByName(name);
+    public void deleteChatRoom(String code){
+        ChatRoom chatRoom = chatRoomRepository.findByCode(code)
+                .orElseThrow(RuntimeException::new);
         chatRoomRepository.delete(chatRoom);
+
     }
 
     // 채팅방 입장
-    public ChatRoom enterChannel(Long url, Long userId){
+    public ChatRoom enterChannel(String code, String username){
         ChatRoom chatRoom = chatRoomRepository
-                .findById(url).orElseThrow(() -> (new IllegalArgumentException("채널이 존재하지 않습니다.")));
+                .findByCode(code).orElseThrow(() -> (new IllegalArgumentException("채널이 존재하지 않습니다.")));
 
         // 추가할 유저
-        ChatUser chatUser = chatUserRepository.findById(userId)
-                .orElseThrow(() -> (new IllegalArgumentException("유저가 존재하지 않습니다.")));
+        Employee employee = employeeRepository.findEmployeeByUsername(username);
 
-        List<ChatUser> list = chatRoom.getChatUsers();
-        list.add(chatUser);
+        FindRoom findRoom = new FindRoom();
+        findRoom.setEmployee(employee);
+        findRoom.setChatRoom(chatRoom);
+        findRoomRepository.save(findRoom);
 
-        return chatRoomRepository.save(chatRoom);
+        return chatRoomRepository.findByCode(code).orElseThrow(() -> new IllegalArgumentException("데이터가 없습니다. "));
     }
     // 채팅방 퇴장
-    public ChatRoom exitChannel(Long url, Long userId){
+    @Transactional
+    public void exitChannel(String code, String username){
         ChatRoom chatRoom = chatRoomRepository
-                .findById(url).orElseThrow(() -> (new IllegalArgumentException("채널이 존재하지 않습니다.")));
+                .findByCode(code).orElseThrow(() -> (new IllegalArgumentException("채널이 존재하지 않습니다.")));
 
         // 제거할 유저
-        ChatUser chatUser = chatUserRepository.findById(userId)
-                .orElseThrow(() -> (new IllegalArgumentException("유저가 존재하지 않습니다.")));
-
-        if(chatRoom.getChatUsers() == null){
-            throw new IllegalArgumentException("퇴장할 유저가 없습니다.");
-        }
-        List<ChatUser> list = chatRoom.getChatUsers();
-        if(list.remove(chatUser)){
-            return chatRoomRepository.save(chatRoom);
-        }
-        else
-            throw new IllegalArgumentException("삭제실패");
+        Employee employee = employeeRepository.findEmployeeByUsername(username);
+        FindRoom findRoom = findRoomRepository.findByChatRoomAndEmployee(chatRoom, employee)
+                .orElseThrow(RuntimeException::new);
+        findRoomRepository.delete(findRoom);
     }
 
     public void deleteRoom(ChatRoom chatRoom){
