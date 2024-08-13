@@ -1,0 +1,47 @@
+
+
+.head {   
+    font-size: 2em;
+    display: inline-block;
+    position: relative;
+    text-shadow: 3px 3px #939aa1;
+    top: 10%;
+    left: 5%;
+    display: flex;
+    justify-content: space-between;
+}
+
+
+.channel-list {
+    width: 100%;
+    max-height: 600px;
+    margin-top: 10%;
+    display: flex;
+    position: relative;
+    flex-wrap: wrap;
+    padding: 0;
+    overflow: scroll;
+    overflow-x: hidden;
+}
+
+.channel {
+    display: flex;
+    justify-content: space-between;
+    border-radius: 3px;
+    background-color: beige;
+    width: 40%;
+    height: 100px;
+    margin: 20px 0;
+    margin-left: 5%;
+    padding: 0;
+}
+
+.channel-btn {
+    align-self: flex-end;
+    
+}
+
+.chatting-index {
+    margin-top: 5%;
+    margin-left: 5%;
+}
