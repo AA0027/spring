@@ -1,6 +1,7 @@
 package org.example.com.utils;
 
 import org.example.com.domain.Attachment;
+import org.example.com.dto.FileMessage;
 import org.example.com.repo.AttachmentRepository;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -27,19 +28,19 @@ public class FileService {
         this.attachmentRepository = attachmentRepository;
     }
 
-    public  void addFiles(Map<String, MultipartFile> files, Long id){
-        if(files == null) return;
-        for(Map.Entry<String, MultipartFile> e : files.entrySet()){
-            if(!e.getKey().startsWith("upfile")) continue;
-
-            Attachment file = upload(e.getValue());
-
-            if(file != null){
-                // FK 설정 필요
-                attachmentRepository.save(file);
-            }
-
-        }
+    public  void addFiles(FileMessage fileMessage){
+//        if(fileMessage == null) return;
+//        for(Map.Entry<String, MultipartFile> e : files.entrySet()){
+//            if(!e.getKey().startsWith("upfile")) continue;
+//
+//            Attachment file = upload(e.getValue());
+//
+//            if(file != null){
+//                // FK 설정 필요
+//                attachmentRepository.save(file);
+//            }
+//
+//        }
     }
 
     public  Attachment upload(MultipartFile multipartFile){

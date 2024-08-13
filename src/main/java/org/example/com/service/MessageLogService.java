@@ -24,7 +24,7 @@ public class MessageLogService {
 
     // 메시지 조회
     public List<MessageLog> getMessages(String code){
-        return messageLogRepository.findMessageLogsByCodeOrderByRegdateDesc(code)
+        return messageLogRepository.findMessageLogsByCodeOrderByRegdate(code)
                 .orElseThrow(() -> new NoSuchDataException("데이터가 없습니다."));
     }
 
@@ -35,7 +35,7 @@ public class MessageLogService {
                 .sender(employee)
                 .code(chatMessage.getCode())
                 .content(chatMessage.getContent())
-                .regdate(LocalDateTime.now())
+                .regdate(chatMessage.getRegdate())
                 .build();
 
         return messageLogRepository.save(messageLog);

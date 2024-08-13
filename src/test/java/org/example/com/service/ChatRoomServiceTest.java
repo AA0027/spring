@@ -1,10 +1,8 @@
 package org.example.com.service;
 
 
-import jakarta.transaction.Transactional;
 import org.example.com.domain.ChatRoom;
 import org.example.com.domain.Employee;
-import org.example.com.domain.FindRoom;
 import org.example.com.repo.ChatRoomRepository;
 import org.example.com.repo.EmployeeRepository;
 import org.example.com.repo.FindRoomRepository;
@@ -31,22 +29,15 @@ class ChatRoomServiceTest {
     PasswordEncoder passwordEncoder;
     @Test
     public void test(){
-        ChatRoom chatRoom = chatRoomService.createChatRoom("test1",
-                List.of("alice01", "bob02"));
-        chatRoomService.createChatRoom("t2",
-                List.of("alice01"));
-        chatRoomService.createChatRoom("t3",
-                List.of("alice01"));
-
-        chatRoomService.createChatRoom("t4",
-                List.of("alice01"));
+        List<Employee> lit = chatRoomService.getEmployeeInRoom("24303d34c96d4c1a9d94ed0e9e6e92be");
+        lit.forEach(System.out::println);
     }
 
     @Test
     public void test1(){
 
-//        List<ChatRoom> list = chatRoomService.getMyChatRooms("alice01");
-//        System.out.println(list);
+        List<ChatRoom> list = chatRoomService.getMyChatRooms("alice01");
+        System.out.println(list);
     }
 
     @Test
@@ -57,5 +48,4 @@ class ChatRoomServiceTest {
         });
         employeeRepository.saveAll(employees);
     }
-
 }

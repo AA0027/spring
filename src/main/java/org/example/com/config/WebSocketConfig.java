@@ -1,6 +1,9 @@
 package org.example.com.config;
 
+import org.example.com.jwt.JWTUtil;
+import org.example.com.service.EmployeeService;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.messaging.simp.config.ChannelRegistration;
 import org.springframework.messaging.simp.config.MessageBrokerRegistry;
 import org.springframework.web.socket.config.annotation.EnableWebSocketMessageBroker;
 import org.springframework.web.socket.config.annotation.StompEndpointRegistry;
@@ -9,6 +12,15 @@ import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerCo
 @Configuration
 @EnableWebSocketMessageBroker
 public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
+
+
+    private final JWTUtil jwtUtil;
+    private final EmployeeService employeeService;
+
+    public WebSocketConfig(JWTUtil jwtUtil, EmployeeService employeeService) {
+        this.jwtUtil = jwtUtil;
+        this.employeeService = employeeService;
+    }
 
     @Override
     public void configureMessageBroker(MessageBrokerRegistry config) {
@@ -20,6 +32,12 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
-        registry.addEndpoint("/channel").setAllowedOrigins("*");
+        registry.addEndpoint("/channel")
+                .setAllowedOrigins("*");
+    }
+
+    @Override
+    public void configureClientInboundChannel(ChannelRegistration registration) {
+        registration.interceptors(new FilterChannelInterceptor(jwtUtil, employeeService));
     }
 }

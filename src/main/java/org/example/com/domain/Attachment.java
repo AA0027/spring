@@ -9,6 +9,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -21,4 +23,5 @@ public class Attachment {
 
     private String sourcename;  // 원본 파일명
     private String filename;    // 저장된 파일명
+    private LocalDateTime localDateTime;
 }

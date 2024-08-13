@@ -7,5 +7,5 @@ import java.util.List;
 import java.util.Optional;
 
 public interface MessageLogRepository extends MongoRepository<MessageLog, Long> {
-    Optional<List<MessageLog>> findMessageLogsByCodeOrderByRegdateDesc(String code);
+    Optional<List<MessageLog>> findMessageLogsByCodeOrderByRegdate(String code);
 }

@@ -15,9 +15,9 @@ import java.time.LocalDateTime;
 @Builder
 public class MessageLog {
     @Id
-    private Long id;
+    private String id;
     private String code;
     private Employee sender;
     private String content;
-    private LocalDateTime regdate;
+    private String regdate;
 }

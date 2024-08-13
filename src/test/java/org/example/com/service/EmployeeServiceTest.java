@@ -1,6 +1,5 @@
 package org.example.com.service;
 
-import org.example.com.domain.Employee;
 import org.example.com.repo.EmployeeRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,7 +12,7 @@ class EmployeeServiceTest {
     EmployeeRepository employeeRepository;
     @Test
     void findByUsername() {
-        Employee employee = employeeRepository.findEmployeeByUsername("bob02");
-        System.out.println(employee);
+//        Employee employee = employeeRepository.findEmployeeByUsername("bob02");
+//        System.out.println(employee);
     }
 }

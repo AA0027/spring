@@ -26,16 +26,15 @@ public class Employee {
     @Enumerated(EnumType.STRING)
     private Dept dept;
 
-    private String username;
-    private String password;
-    private String code;
-    private String role;
-
     @OneToMany(fetch = FetchType.EAGER)
     @JoinColumn(name = "employee_id")
-    @ToString.Exclude
     @Builder.Default
-    private List<FindRoom> findRooms = new ArrayList<>();
+    private List<Sub> subs = new ArrayList<>();
+    private String username;
+    private String password;
+    private String role;
+
+
 
 
     public static Employee employee(String name, String username, String password){

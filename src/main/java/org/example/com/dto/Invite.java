@@ -5,7 +5,7 @@ import lombok.Data;
 import java.util.List;
 
 @Data
-public class CreateDto {
-    private String name;
-    private String myId;
+public class Invite {
+    private String code;
+    private List<String> usernames;
 }

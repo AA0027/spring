@@ -20,7 +20,7 @@ public class MessageController {
 
 
     @MessageMapping("/{roomId}")
-    public void greeting(@DestinationVariable Long roomId, ChatMessage message) throws Exception {
+    public void greeting(@DestinationVariable String roomId, ChatMessage message) throws Exception {
         Thread.sleep(1000); // simulated delay
 
         messageLogService.saveMessage(message);

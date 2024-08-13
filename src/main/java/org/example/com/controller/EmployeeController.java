@@ -27,12 +27,20 @@ public class EmployeeController {
         List<Employee> list = employeeService.findAll();
         if(list == null)
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        else return ResponseEntity.ok(list);
+        return ResponseEntity.ok(list);
     }
     // 부서별 정보찾기
-    @GetMapping("/search")
+    @GetMapping("/dept")
     public ResponseEntity<?> getEmployees(@RequestParam String dept){
         List<Employee> list = employeeService.findEmployeeByDept(dept);
+        if(list == null)
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        else return ResponseEntity.ok(list);
+    }
+
+    @GetMapping("/search")
+    public ResponseEntity<?> searchEmployees(@RequestParam String word){
+        List<Employee> list = employeeService.searchEmployee(word);
         if(list == null)
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         else return ResponseEntity.ok(list);

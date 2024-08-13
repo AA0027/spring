@@ -24,11 +24,6 @@ public class ChatRoom {
     @Column(unique = true)
     private String code;
 
-    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
-    @JoinColumn(name = "chatRoom_id")
-    @ToString.Exclude
-    @Builder.Default
-    private List<FindRoom> findRooms = new ArrayList<>();
 
     public static ChatRoom createRoom(String name){
         return ChatRoom.builder()

@@ -3,6 +3,8 @@ package org.example.com.service;
 import org.example.com.domain.ChatRoom;
 import org.example.com.domain.Employee;
 import org.example.com.domain.FindRoom;
+import org.example.com.dto.Invite;
+import org.example.com.excep.NoSuchDataException;
 import org.example.com.repo.ChatRoomRepository;
 import org.example.com.repo.EmployeeRepository;
 import org.example.com.repo.FindRoomRepository;
@@ -26,31 +28,19 @@ public class ChatRoomService {
     }
 
 
-    // 채팅방 생성
-    public ChatRoom createChatRoom(String name, List<String> username){
-        ChatRoom room =chatRoomRepository.save(ChatRoom.createRoom(name));
-        for(String uId : username){
-            Employee employee = employeeRepository.findEmployeeByUsername(uId);
-            FindRoom findRoom = new FindRoom();
-            findRoom.setChatRoom(room);
-            findRoom.setEmployee(employee);
-            findRoomRepository.save(findRoom);
-        }
-        return room;
-    }
 
     // 채팅방 생성
-    public ChatRoom createChatRoom(String name){
-        ChatRoom room = ChatRoom.createRoom(name);
-        chatRoomRepository.save(room);
+    public ChatRoom createChatRoom(String name, String username){
+        Employee employee = employeeRepository.findEmployeeByUsername(username);
+        ChatRoom room = chatRoomRepository.save(ChatRoom.createRoom(name));
+        FindRoom findRoom = new FindRoom();
+        findRoom.setEmployee(employee);
+        findRoom.setChatRoom(room);
+        findRoomRepository.save(findRoom);
         return room;
     }
 
 
-    // 이름으로 채팅방 조회
-    public ChatRoom findChatRoom(Long id){
-        return chatRoomRepository.findById(id).orElse(null);
-    }
 
     // 나의 채팅방 조회
     public List<ChatRoom> getMyChatRooms(String username){
@@ -85,20 +75,23 @@ public class ChatRoomService {
 
     }
 
-    // 채팅방 입장
-    public ChatRoom enterChannel(String code, String username){
+    // 채팅방 초대
+    public ChatRoom inviteChannel(Invite invite){
         ChatRoom chatRoom = chatRoomRepository
-                .findByCode(code).orElseThrow(() -> (new IllegalArgumentException("채널이 존재하지 않습니다.")));
+                .findByCode(invite.getCode()).orElseThrow(() -> (new IllegalArgumentException("채널이 존재하지 않습니다.")));
 
         // 추가할 유저
-        Employee employee = employeeRepository.findEmployeeByUsername(username);
+        List<Employee> employees = employeeRepository.findEmpByList(invite.getUsernames())
+                .orElseThrow(()->new NoSuchDataException("사용자가 없습니다."));
 
-        FindRoom findRoom = new FindRoom();
-        findRoom.setEmployee(employee);
-        findRoom.setChatRoom(chatRoom);
-        findRoomRepository.save(findRoom);
+        for(Employee employee : employees){
+            FindRoom findRoom = new FindRoom();
+            findRoom.setEmployee(employee);
+            findRoom.setChatRoom(chatRoom);
+            findRoomRepository.save(findRoom);
+        }
 
-        return chatRoomRepository.findByCode(code).orElseThrow(() -> new IllegalArgumentException("데이터가 없습니다. "));
+        return chatRoomRepository.findByCode(invite.getCode()).orElseThrow(() -> new IllegalArgumentException("데이터가 없습니다. "));
     }
     // 채팅방 퇴장
     @Transactional

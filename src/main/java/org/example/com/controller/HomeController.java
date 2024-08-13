@@ -3,6 +3,7 @@ package org.example.com.controller;
 
 import org.example.com.config.PrincipalDetails;
 import org.example.com.domain.Employee;
+import org.example.com.service.EmployeeService;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -12,6 +13,12 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 public class HomeController {
+    private final EmployeeService employeeService;
+
+    public HomeController(EmployeeService employeeService) {
+        this.employeeService = employeeService;
+    }
+
     @GetMapping("/")
     public String home() {
         return "Home";
@@ -37,7 +44,10 @@ public class HomeController {
     @RequestMapping("/user")
     public Employee user(@AuthenticationPrincipal PrincipalDetails userDetails){
 
-        return (userDetails != null) ? userDetails.getUser() : null;
+        Employee e = (userDetails != null) ? userDetails.getUser() : null;
+        Employee info = employeeService.findByUsername(e.getUsername());
+        info.setRole(e.getRole());
+        return info;
     }
 
 }

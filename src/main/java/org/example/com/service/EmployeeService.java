@@ -29,19 +29,19 @@ public class EmployeeService {
         switch(dept){
             case "Tech01":
                 list = employeeRepository.findEmployeeByDept(Dept.Tech01)
-                        .orElseThrow(() -> new NoSuchDataException("해당 데이커가 없습니다."));
+                        .orElseThrow(() -> new NoSuchDataException("해당 데이터가 없습니다."));
                 break;
             case "Tech02":
                 list = employeeRepository.findEmployeeByDept(Dept.Tech02)
-                        .orElseThrow(() -> new NoSuchDataException("해당 데이커가 없습니다."));
+                        .orElseThrow(() -> new NoSuchDataException("해당 데이터가 없습니다."));
                 break;
             case "Tech03":
                 list = employeeRepository.findEmployeeByDept(Dept.Tech03)
-                        .orElseThrow(() -> new NoSuchDataException("해당 데이커가 없습니다."));
+                        .orElseThrow(() -> new NoSuchDataException("해당 데이터가 없습니다."));
                 break;
             case "QA" :
                 list = employeeRepository.findEmployeeByDept(Dept.QA)
-                        .orElseThrow(() -> new NoSuchDataException("해당 데이커가 없습니다."));
+                        .orElseThrow(() -> new NoSuchDataException("해당 데이터가 없습니다."));
                 break;
             default:
                 list = null;
@@ -51,6 +51,17 @@ public class EmployeeService {
         return list;
     }
 
+    // 검색창으로 직원조회
+    public List<Employee> searchEmployee(String word){
+
+        List<Employee> list = employeeRepository.findEmployeeByNameContainsIgnoreCase(word)
+                .orElseThrow(() -> new NoSuchDataException("해당 데이터가 없습니다."));
+
+        return list;
+    }
+
     // 전체 직원
-    public List<Employee> findAll(){return employeeRepository.findAll();}
+    public List<Employee> findAll(){
+        return employeeRepository.findEmployees()
+            .orElseThrow(() -> new NoSuchDataException("해당 데이커가 없습니다."));}
 }

@@ -13,4 +13,5 @@ public class ChatMessage {
     private String code;
     private String username;
     private String content;
+    private String regdate;
 }
