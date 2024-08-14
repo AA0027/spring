@@ -25,15 +25,15 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
     @Override
     public void configureMessageBroker(MessageBrokerRegistry config) {
         // 메세지 구독하는 여청의 prefix
-        config.enableSimpleBroker("/sub");
+        config.enableSimpleBroker("/api/sub");
         
         // 메세지 발행하는 요청의 prefix
-        config.setApplicationDestinationPrefixes("/pub");
+        config.setApplicationDestinationPrefixes("/api/pub");
     }
 
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
-        registry.addEndpoint("/channel")
+        registry.addEndpoint("/api/channel")
                 .setAllowedOrigins("*");
     }
 

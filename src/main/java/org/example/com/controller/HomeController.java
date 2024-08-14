@@ -3,13 +3,12 @@ package org.example.com.controller;
 
 import org.example.com.config.PrincipalDetails;
 import org.example.com.domain.Employee;
+import org.example.com.dto.UserDto;
 import org.example.com.service.EmployeeService;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api")
@@ -25,7 +24,10 @@ public class HomeController {
         return "Home";
     }
 
-
+    @PostMapping("/login")
+    public String login (@RequestBody UserDto userDto){
+        return "hello";
+    }
 
     @GetMapping("/admin")
     public String admin(){
