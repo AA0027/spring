@@ -3,7 +3,7 @@ spring:
     name: messenger
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/sns
+    url: jdbc:mysql://54.180.104.144:3306/sns
     username: user326
     password: 1234
   data:
@@ -32,4 +32,4 @@ jwt:
   secret: 64461f01e1af406da538b9c48d801ce59142452199ff112fb5404c8e7e98e3ff
 
 cors:
-  allowed-origins: http://54.180.104.144:3000,http://54.180.104.144:3001,http://54.180.104.144:80
+  allowed-origins: http://54.180.104.144
