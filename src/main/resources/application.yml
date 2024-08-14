@@ -2,8 +2,8 @@ spring:
   application:
     name: messenger
   datasource:
-    driver-class-name: com.mysql.jdbc.Driver
-    url: jdbc:mysql://54.180.104.144:3306/sns
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/sns
     username: user326
     password: 1234
   data:
