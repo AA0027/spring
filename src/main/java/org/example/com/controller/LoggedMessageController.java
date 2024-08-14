@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/messages")
+@RequestMapping("/api/messages")
 public class LoggedMessageController {
 
     private final MessageLogService messageLogService;
