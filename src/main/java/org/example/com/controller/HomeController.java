@@ -24,10 +24,6 @@ public class HomeController {
         return "Home";
     }
 
-    @PostMapping("/login")
-    public String login (@RequestBody UserDto userDto){
-        return "hello";
-    }
 
     @GetMapping("/admin")
     public String admin(){

@@ -65,7 +65,6 @@ public class SecurityConfig {
 
         // Http basic 인증방식 disable
         http.httpBasic((auth) -> auth.disable());
-        http.formLogin(login -> login.loginProcessingUrl("/api/login"));
 
         //경로별 인가 작업
         http
