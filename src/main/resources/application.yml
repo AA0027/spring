@@ -34,4 +34,4 @@ jwt:
   secret: 64461f01e1af406da538b9c48d801ce59142452199ff112fb5404c8e7e98e3ff
 
 cors:
-  allowed-origins: http://3.35.4.138:3000, http://3.35.4.138:80
+  allowed-origins: http://3.35.4.138
