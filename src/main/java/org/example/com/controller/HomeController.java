@@ -33,8 +33,8 @@ public class HomeController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody UserDto userDto) throws UserPrincipalNotFoundException {
-        String token = authService.login(userDto);
+    public ResponseEntity<?> login(@RequestParam String username, @RequestParam String password) throws UserPrincipalNotFoundException {
+        String token = authService.login(username, password);
 
         HttpHeaders headers = new HttpHeaders();
         headers.set("Authorization", "Bearer " + token);

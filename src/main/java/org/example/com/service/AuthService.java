@@ -19,8 +19,7 @@ public class AuthService {
         this.principalDetailsService = principalDetailsService;
     }
 
-    public String login(UserDto userDto) throws UserPrincipalNotFoundException {
-        String username = userDto.getUsername();
+    public String login(String username, String password) throws UserPrincipalNotFoundException {
 
         PrincipalDetails user = (PrincipalDetails) principalDetailsService
                 .loadUserByUsername(username);
