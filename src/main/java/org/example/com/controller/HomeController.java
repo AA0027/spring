@@ -5,27 +5,21 @@ import lombok.extern.slf4j.Slf4j;
 import org.example.com.config.PrincipalDetails;
 import org.example.com.domain.Employee;
 import org.example.com.dto.UserDto;
-import org.example.com.service.AuthService;
 import org.example.com.service.EmployeeService;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
-
-import java.nio.file.attribute.UserPrincipalNotFoundException;
 @Slf4j
 @RestController
 @RequestMapping("/api")
 public class HomeController {
     private final EmployeeService employeeService;
-    private final AuthService authService;
 
-    public HomeController(EmployeeService employeeService, AuthService authService) {
+    public HomeController(EmployeeService employeeService) {
         this.employeeService = employeeService;
-        this.authService = authService;
+//        this.authService = authService;
     }
 
     @GetMapping("/")
@@ -42,6 +36,12 @@ public class HomeController {
 //        return new ResponseEntity<>(headers, HttpStatus.OK);
 //    }
 
+
+    @PostMapping("join")
+    public ResponseEntity<?> join(@RequestBody UserDto userDto){
+        employeeService.createUser(userDto);
+        return ResponseEntity.ok().build();
+    }
     @GetMapping("/admin")
     public String admin(){
         return "admin page";

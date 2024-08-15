@@ -1,24 +1,46 @@
 package org.example.com.service;
 
+import lombok.extern.slf4j.Slf4j;
 import org.example.com.domain.Employee;
+import org.example.com.dto.UserDto;
 import org.example.com.excep.NoSuchDataException;
 import org.example.com.repo.EmployeeRepository;
 import org.example.com.type.Dept;
+import org.example.com.type.Position;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Service
+@Slf4j
 public class EmployeeService {
     private final EmployeeRepository employeeRepository;
+    private final PasswordEncoder passwordEncoder;
 
-    public EmployeeService(EmployeeRepository employeeRepository) {
+    public EmployeeService(EmployeeRepository employeeRepository, PasswordEncoder passwordEncoder) {
         this.employeeRepository = employeeRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     // 유저 생성
-    public Employee createUser(Employee employee){return employeeRepository.save(employee);};
+    public void createUser(UserDto userDto){
+        Employee employee = Employee
+                .builder()
+                .name("조창성")
+                .username(userDto.getUsername())
+                .password(passwordEncoder.encode(userDto.getPassword()))
+                .role("ROLE_MEMBER")
+                .position(Position.Director)
+                .dept(Dept.Tech01)
+                .build();
+
+        if(employeeRepository.save(employee) == null){
+            log.error("사용자 생성 실패");
+        }
+        else log.info("사용자 생성 성공");
+    }
 
     // 아이디로 직원찾기
     public Employee findByUsername(String username){return employeeRepository.findEmployeeByUsername(username);}
