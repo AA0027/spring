@@ -1,6 +1,7 @@
 package org.example.com.controller;
 
 
+import lombok.extern.slf4j.Slf4j;
 import org.example.com.config.PrincipalDetails;
 import org.example.com.domain.Employee;
 import org.example.com.dto.UserDto;
@@ -15,7 +16,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.nio.file.attribute.UserPrincipalNotFoundException;
-
+@Slf4j
 @RestController
 @RequestMapping("/api")
 public class HomeController {
@@ -32,14 +33,14 @@ public class HomeController {
         return "Home";
     }
 
-    @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestParam String username, @RequestParam String password) throws UserPrincipalNotFoundException {
-        String token = authService.login(username, password);
-
-        HttpHeaders headers = new HttpHeaders();
-        headers.set("Authorization", "Bearer " + token);
-        return new ResponseEntity<>(headers, HttpStatus.OK);
-    }
+//    @PostMapping("/login")
+//    public ResponseEntity<?> login(@RequestParam String username, @RequestParam String password) throws UserPrincipalNotFoundException {
+//        String token = authService.login(username, password);
+//
+//        HttpHeaders headers = new HttpHeaders();
+//        headers.set("Authorization", "Bearer " + token);
+//        return new ResponseEntity<>(headers, HttpStatus.OK);
+//    }
 
     @GetMapping("/admin")
     public String admin(){

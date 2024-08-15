@@ -6,6 +6,7 @@ import jakarta.servlet.ServletRequest;
 import jakarta.servlet.ServletResponse;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.extern.slf4j.Slf4j;
 import org.example.com.config.PrincipalDetails;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -17,7 +18,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import java.io.IOException;
 import java.util.Collection;
 import java.util.stream.Collectors;
-
+@Slf4j
 public class LoginFilter extends UsernamePasswordAuthenticationFilter {
 
     private final AuthenticationManager authenticationManager;
@@ -34,10 +35,13 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
         String username = obtainUsername(request);
         String password = obtainPassword(request);
-
+        log.info("username: "+username);
+        log.info("password: "+password);
         Authentication token = new UsernamePasswordAuthenticationToken(username, password, null);
 
-        return authenticationManager.authenticate(token);
+        Authentication authenticate = authenticationManager.authenticate(token);
+        log.info(authenticate.toString());
+        return authenticate;
     }
 
     @Override
