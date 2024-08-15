@@ -40,7 +40,7 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
         Authentication token = new UsernamePasswordAuthenticationToken(username, password, null);
 
         Authentication authenticate = authenticationManager.authenticate(token);
-        log.info(authenticate.toString());
+        log.info("유저 authenticate" + authenticate.toString());
         return authenticate;
     }
 
