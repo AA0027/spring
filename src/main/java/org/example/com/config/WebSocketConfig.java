@@ -33,7 +33,7 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
-        registry.addEndpoint("/api/channel")
+        registry.addEndpoint("/channel")
                 .setAllowedOrigins("*");
     }
 
