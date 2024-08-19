@@ -1,6 +1,7 @@
 package org.example.com.controller;
 
 import lombok.extern.slf4j.Slf4j;
+import org.example.com.domain.MessageLog;
 import org.example.com.dto.ChatMessage;
 import org.example.com.service.MessageLogService;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
@@ -25,10 +26,9 @@ public class MessageController {
     public void greeting(@DestinationVariable String roomId, ChatMessage message) throws Exception {
         Thread.sleep(1000); // simulated delay
         log.info(message.getUsername() + "메지지 들어옴");
-        messageLogService.saveMessage(message);
+        MessageLog messageLog = messageLogService.saveMessage(message);
 
-
-        simpMessagingTemplate.convertAndSend("/sub/" + roomId, message);
+        simpMessagingTemplate.convertAndSend("/sub/" + roomId, messageLog);
 
     }
 
