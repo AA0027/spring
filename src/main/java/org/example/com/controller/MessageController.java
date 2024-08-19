@@ -24,8 +24,9 @@ public class MessageController {
     @MessageMapping("/{roomId}")
     public void greeting(@DestinationVariable String roomId, ChatMessage message) throws Exception {
         Thread.sleep(1000); // simulated delay
-        log.info("메지지 들어옴");
+        log.info(message.getUsername() + "메지지 들어옴");
         messageLogService.saveMessage(message);
+
 
         simpMessagingTemplate.convertAndSend("/sub/" + roomId, message);
 
