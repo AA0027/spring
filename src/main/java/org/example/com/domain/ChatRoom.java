@@ -24,7 +24,10 @@ public class ChatRoom {
     @Column(unique = true)
     private String code;
 
-
+    @OneToMany(fetch = FetchType.EAGER)
+    @JoinColumn(name = "chatRoom_id")
+    @Builder.Default
+    private List<Attachment> files = new ArrayList<>();
     public static ChatRoom createRoom(String name){
         return ChatRoom.builder()
                 .name(name)

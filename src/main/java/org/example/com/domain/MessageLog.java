@@ -8,6 +8,8 @@ import lombok.NoArgsConstructor;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.time.LocalDateTime;
+import java.util.List;
+
 @Document(collection = "message_log")
 @Data
 @NoArgsConstructor
@@ -18,6 +20,8 @@ public class MessageLog {
     private String id;
     private String code;
     private Employee sender;
+    private String type;
     private String content;
     private String regdate;
+    private List<Attachment> files;
 }

@@ -14,7 +14,10 @@ spring:
       port: 27017
       database: test
 
-
+  servlet:
+    multipart:
+      max-file-size: 5MB
+      max-request-size: 10MB
   jpa:
     hibernate:
 #      ddl-auto: create
@@ -36,3 +39,5 @@ jwt:
 cors:
 #  allowed-origins: http://localhost:3000, http://localhost:3001
   allowed-origins: http://3.35.4.138:80, http://3.35.4.138:3000
+
+
