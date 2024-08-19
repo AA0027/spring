@@ -38,6 +38,6 @@ jwt:
 
 cors:
 #  allowed-origins: http://localhost:3000, http://localhost:3001
-  allowed-origins: http://3.35.4.138:80, http://3.35.4.138:3000
+  allowed-origins: http://3.37.123.45, http://3.37.123.45:3000
 
 
