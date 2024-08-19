@@ -38,9 +38,15 @@ public class MessageLogService {
         Employee employee = employeeRepository.findEmployeeByUsername(chatMessage.getUsername());
 
         if(chatMessage.getFiles() == null){
-            System.out.println("첨부된 파일이 없습니다.");
-            // TODO
-            // 에러처리
+            System.out.println("일반 메시지 저장");
+            MessageLog messageLog = MessageLog.builder()
+                    .sender(employee)
+                    .code(chatMessage.getCode())
+                    .content(chatMessage.getContent())
+                    .regdate(chatMessage.getRegdate())
+                    .build();
+
+            return messageLogRepository.save(messageLog);
         }
         List<Attachment> list = (chatMessage.getFiles()).stream()
                 .map((f) -> attachmentRepository.findById(f.getId()).orElse(null)).toList();
