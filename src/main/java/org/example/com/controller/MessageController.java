@@ -1,5 +1,6 @@
 package org.example.com.controller;
 
+import lombok.extern.slf4j.Slf4j;
 import org.example.com.dto.ChatMessage;
 import org.example.com.service.MessageLogService;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
@@ -8,6 +9,7 @@ import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
 
 @Controller
+@Slf4j
 public class MessageController {
 
     private final SimpMessagingTemplate simpMessagingTemplate;
@@ -22,7 +24,7 @@ public class MessageController {
     @MessageMapping("/{roomId}")
     public void greeting(@DestinationVariable String roomId, ChatMessage message) throws Exception {
         Thread.sleep(1000); // simulated delay
-
+        log.info("메지지 들어옴");
         messageLogService.saveMessage(message);
 
         simpMessagingTemplate.convertAndSend("/sub/" + roomId, message);
