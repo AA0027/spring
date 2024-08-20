@@ -6,20 +6,20 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDateTime;
-
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
 @Entity
-public class Attachment {
+public class Invite {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String sourcename;  // 원본 파일명
-    private String filename;    // 저장된 파일명
-    private LocalDateTime localDateTime;
+    private String code;
+    @ManyToOne
+    private Employee from;
+    @ManyToOne
+    private Employee to;
 
 }

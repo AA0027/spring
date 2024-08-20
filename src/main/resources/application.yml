@@ -20,8 +20,8 @@ spring:
       max-request-size: 10MB
   jpa:
     hibernate:
-#      ddl-auto: create
-      ddl-auto: update
+      ddl-auto: create-drop
+#      ddl-auto: update
       naming:
         physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
     show-sql: true
@@ -38,6 +38,6 @@ jwt:
 
 cors:
 #  allowed-origins: http://localhost:3000, http://localhost:3001
-  allowed-origins: http://3.37.123.45, http://3.37.123.45:3000
+  allowed-origins: http://3.35.9.65, http://3.35.9.65:3000
 
 

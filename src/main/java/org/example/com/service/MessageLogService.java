@@ -1,14 +1,13 @@
 package org.example.com.service;
 
-import org.example.com.domain.*;
+import org.example.com.domain.Attachment;
+import org.example.com.domain.Employee;
+import org.example.com.domain.MessageLog;
 import org.example.com.dto.ChatMessage;
-import org.example.com.dto.FileDto;
 import org.example.com.excep.NoSuchDataException;
 import org.example.com.repo.*;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -49,7 +48,7 @@ public class MessageLogService {
             return messageLogRepository.save(messageLog);
         }
         List<Attachment> list = (chatMessage.getFiles()).stream()
-                .map((f) -> attachmentRepository.findById(f.getId()).orElse(null)).toList();
+                .map((id) -> attachmentRepository.findById(id).orElse(null)).toList();
 
         MessageLog messageLog = MessageLog.builder()
                 .sender(employee)

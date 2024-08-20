@@ -2,9 +2,8 @@ package org.example.com.controller;
 
 import org.example.com.domain.Attachment;
 import org.example.com.dto.FileDto;
-import org.example.com.dto.FileMessage;
 import org.example.com.utils.FileService;
-import org.springframework.core.io.Resource;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -12,7 +11,6 @@ import org.springframework.web.multipart.MultipartFile;
 import java.nio.file.NoSuchFileException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 @RestController
 @RequestMapping("/api/file")
@@ -24,6 +22,7 @@ public class FileController {
         this.fileService = fileService;
     }
 
+    // 파일 다운로드
     @GetMapping("/download")
     public ResponseEntity<?> getFile(@RequestParam(required = false) Long id){
         return fileService.download(id);
@@ -41,9 +40,21 @@ public class FileController {
             throw new NoSuchFileException("저장에 실패 했습니다.");
         return ResponseEntity.ok(attachmentList);
     }
+    // 채팅방에 파일 저장
+    @PostMapping("/save")
+    public ResponseEntity<?> saveFiles(@RequestBody FileDto fileDto){
+        fileService.saveFile(fileDto);
+        return ResponseEntity.ok().build();
+    }
 
+    // 채팅방 파일 불러오기
     @GetMapping("/list")
-    public ResponseEntity<?> chatRoomFiles(@RequestParam(required = false) String code){
-        return null;
+    public ResponseEntity<?> getChatRoomFiles(@RequestParam String code)
+    {
+        List<Attachment> attachmentList = fileService.getChatRoomFiles(code);
+        if(attachmentList == null)
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        return ResponseEntity.ok(attachmentList);
+
     }
 }

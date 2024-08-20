@@ -2,10 +2,8 @@ package org.example.com.controller;
 
 import org.example.com.domain.ChatRoom;
 import org.example.com.domain.Employee;
-import org.example.com.dto.Channel;
-import org.example.com.dto.CreateDto;
-import org.example.com.dto.Invite;
-import org.example.com.dto.SubDTO;
+import org.example.com.domain.Invite;
+import org.example.com.dto.*;
 import org.example.com.service.ChatRoomService;
 import org.example.com.service.SubService;
 import org.springframework.http.HttpStatus;
@@ -33,6 +31,15 @@ public class ChatRoomController {
         return ResponseEntity.ok(list);
     }
 
+    // 나의 초대 목록 가져오기
+    @PostMapping("/my-invite")
+    public ResponseEntity<?> getMyInvites(@RequestBody Channel channel){
+        List<Invite> cards = chatRoomService.getInviteList(channel);
+//        if(cards == null)
+//            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        return ResponseEntity.ok(cards);
+    }
+
     // 채팅방 생성
     @PostMapping("/newChannel")
     public ResponseEntity<?> createChannel(@RequestBody CreateDto createDto){
@@ -41,15 +48,6 @@ public class ChatRoomController {
         if(chatRoom == null)
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         return ResponseEntity.ok(chatRoom);
-    }
-
-    // 채팅방 초대
-    @PostMapping("/invite")
-    public ResponseEntity<?> enterChannel(@RequestBody Invite invite){
-        ChatRoom chatRoom = chatRoomService.inviteChannel(invite);
-        if(chatRoom == null)
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        return ResponseEntity.ok().build();
     }
 
     // 채팅방 나가기

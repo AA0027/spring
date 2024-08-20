@@ -3,11 +3,15 @@ package org.example.com.service;
 import org.example.com.domain.ChatRoom;
 import org.example.com.domain.Employee;
 import org.example.com.domain.FindRoom;
-import org.example.com.dto.Invite;
+import org.example.com.domain.Invite;
+import org.example.com.dto.Channel;
+import org.example.com.dto.InviteCard;
+import org.example.com.dto.InviteDTO;
 import org.example.com.excep.NoSuchDataException;
 import org.example.com.repo.ChatRoomRepository;
 import org.example.com.repo.EmployeeRepository;
 import org.example.com.repo.FindRoomRepository;
+import org.example.com.repo.InviteRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -20,11 +24,12 @@ public class ChatRoomService {
     private final ChatRoomRepository chatRoomRepository;
     private final EmployeeRepository employeeRepository;
     private final FindRoomRepository findRoomRepository;
-
-    public ChatRoomService(ChatRoomRepository chatRoomRepository, EmployeeRepository employeeRepository, FindRoomRepository findRoomRepository) {
+    private final InviteRepository inviteRepository;
+    public ChatRoomService(ChatRoomRepository chatRoomRepository, EmployeeRepository employeeRepository, FindRoomRepository findRoomRepository, InviteRepository inviteRepository) {
         this.chatRoomRepository = chatRoomRepository;
         this.employeeRepository = employeeRepository;
         this.findRoomRepository = findRoomRepository;
+        this.inviteRepository = inviteRepository;
     }
 
 
@@ -76,23 +81,23 @@ public class ChatRoomService {
     }
 
     // 채팅방 초대
-    public ChatRoom inviteChannel(Invite invite){
-        ChatRoom chatRoom = chatRoomRepository
-                .findByCode(invite.getCode()).orElseThrow(() -> (new IllegalArgumentException("채널이 존재하지 않습니다.")));
-
-        // 추가할 유저
-        List<Employee> employees = employeeRepository.findEmpByList(invite.getUsernames())
-                .orElseThrow(()->new NoSuchDataException("사용자가 없습니다."));
-
-        for(Employee employee : employees){
-            FindRoom findRoom = new FindRoom();
-            findRoom.setEmployee(employee);
-            findRoom.setChatRoom(chatRoom);
-            findRoomRepository.save(findRoom);
-        }
-
-        return chatRoomRepository.findByCode(invite.getCode()).orElseThrow(() -> new IllegalArgumentException("데이터가 없습니다. "));
+    public InviteCard inviteEmployee(InviteDTO inviteDTO){
+        Employee fromUser = employeeRepository.findEmployeeByUsername(inviteDTO.getFrom());
+        Employee toUser = employeeRepository.findEmployeeByUsername(inviteDTO.getTo());
+        Invite invite = Invite.builder()
+                .code(inviteDTO.getCode())
+                .from(fromUser)
+                .to(toUser)
+                .build();
+        inviteRepository.save(invite);
+        return new InviteCard(inviteDTO.getFrom(), inviteDTO.getCode());
     }
+
+    // 초대장 목록
+    public List<Invite> getInviteList(Channel channel){
+        Employee employee = employeeRepository.findEmployeeByUsername(channel.getUsername());
+        return inviteRepository.findByTo(employee)
+                .orElseThrow(() -> new NoSuchDataException("해당데이터가 존재하지 않습니다."));    }
     // 채팅방 퇴장
     @Transactional
     public void exitChannel(String code, String username){

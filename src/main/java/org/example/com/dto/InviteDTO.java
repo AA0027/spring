@@ -5,7 +5,8 @@ import lombok.Data;
 import java.util.List;
 
 @Data
-public class Invite {
+public class InviteDTO {
     private String code;
-    private List<String> usernames;
+    private String from;
+    private String to;
 }

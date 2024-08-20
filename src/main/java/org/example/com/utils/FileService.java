@@ -1,8 +1,16 @@
 package org.example.com.utils;
 
 import org.example.com.domain.Attachment;
+import org.example.com.domain.ChatRoom;
+import org.example.com.domain.Employee;
+import org.example.com.domain.FindRoom;
+import org.example.com.dto.FileDto;
 import org.example.com.dto.FileMessage;
+import org.example.com.excep.NoSuchDataException;
 import org.example.com.repo.AttachmentRepository;
+import org.example.com.repo.ChatRoomRepository;
+import org.example.com.repo.EmployeeRepository;
+import org.example.com.repo.FindRoomRepository;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.core.io.Resource;
@@ -18,6 +26,8 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -27,11 +37,45 @@ public class FileService {
     private String uploadDir;
 
     private final AttachmentRepository attachmentRepository;
-
-    public FileService(AttachmentRepository attachmentRepository) {
+    private final EmployeeRepository employeeRepository;
+    private final ChatRoomRepository chatRoomRepository;
+    private final FindRoomRepository findRoomRepository;
+    public FileService(AttachmentRepository attachmentRepository, EmployeeRepository employeeRepository, ChatRoomRepository chatRoomRepository, FindRoomRepository findRoomRepository) {
         this.attachmentRepository = attachmentRepository;
+        this.employeeRepository = employeeRepository;
+        this.chatRoomRepository = chatRoomRepository;
+        this.findRoomRepository = findRoomRepository;
     }
+    // 파일들 가져오기
+    public List<Attachment> getChatRoomFiles(String code){
+        List<Attachment> list = new ArrayList<>();
 
+        ChatRoom chatRoom = chatRoomRepository.findByCode(code)
+                .orElseThrow(() -> new NoSuchDataException("chatRoom 이 존재하지 않습니다. "));
+        List<FindRoom> findRoomList = findRoomRepository.findByChatRoom(chatRoom)
+                .orElseThrow(() -> new NoSuchDataException("FindRoom 이 존재하지 않습니다. "));
+
+        findRoomList.forEach(e -> {
+            list.addAll(e.getFiles());
+        });
+        return list;
+    }
+    // 채팅방에 파일 저장
+    public void saveFile(FileDto fileDto){
+        Employee employee = employeeRepository.findEmployeeByUsername(fileDto.getUsername());
+        ChatRoom chatRoom = chatRoomRepository.findByCode(fileDto.getCode())
+                .orElseThrow(() -> new NoSuchDataException("chatRoom 이 존재하지 않습니다. "));
+        List<Attachment> attachmentList = fileDto.getFileID().stream().map(id -> attachmentRepository
+                .findById(id).orElseThrow(() -> new NoSuchDataException("Attachment 가 존재하지 않습니다."))).toList();
+
+        FindRoom findRoom = findRoomRepository.findByChatRoomAndEmployee(chatRoom, employee)
+                .orElseThrow(() -> new NoSuchDataException("FindRoom 이 존재하지 않습니다. "));
+        List<Attachment> list = findRoom.getFiles();
+        list.addAll(attachmentList);
+        findRoom.setFiles(list);
+        findRoomRepository.save(findRoom);
+    }
+    // 물리적인 파일 저장
     public  Attachment upload(MultipartFile multipartFile){
         Attachment attachment = null;
         String uuid = UUID.randomUUID().toString();
@@ -79,7 +123,7 @@ public class FileService {
         return attachment;
     }
 
-
+    // 파일 데이터다운로드
     public ResponseEntity<?> download(Long id){
         if(id == null) return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
         Attachment file = attachmentRepository.findById(id).orElse(null);
@@ -94,11 +138,12 @@ public class FileService {
 
 
         try {
-            String mimeType = Files.probeContentType(Paths.get(path));
+//            String mimeType = Files.probeContentType(Paths.get(path));
+//
+//            if(mimeType == null)
+//                mimeType = "application/octet-stream";
 
-            if(mimeType == null)
-                mimeType = "application/octet-stream";
-
+            String mimeType = "application/octet-stream";
             Path filePath = Paths.get(path);
 
             Resource resource = new InputStreamResource(Files.newInputStream(filePath));

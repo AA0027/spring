@@ -9,5 +9,4 @@ public class FileDto {
     private List<Long> fileID;
     private String username;
     private String code;
-    private String regdate;
 }
