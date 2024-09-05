@@ -34,7 +34,7 @@ class ChatRoomServiceTest {
     public void test(){
 
         chatRoomService.createChatRoom("hello","alice01");
-        System.out.println(chatRoomRepository.findAll());
+//        System.out.println(chatRoomRepository.findAll());
 //        chatRoomService.deleteChatRoom("26234ae07727414991cef6f488cae9b9");
     }
 
