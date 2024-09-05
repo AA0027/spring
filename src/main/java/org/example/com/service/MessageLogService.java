@@ -16,14 +16,14 @@ public class MessageLogService {
     private final MessageLogRepository messageLogRepository;
     private final EmployeeRepository employeeRepository;
     private final ChatRoomRepository chatRoomRepository;
-    private final FindRoomRepository findRoomRepository;
+//    private final FindRoomRepository findRoomRepository;
     private final AttachmentRepository attachmentRepository;
 
-    public MessageLogService(MessageLogRepository messageLogRepository, EmployeeRepository employeeRepository, ChatRoomRepository chatRoomRepository, FindRoomRepository findRoomRepository, AttachmentRepository attachmentRepository) {
+    public MessageLogService(MessageLogRepository messageLogRepository, EmployeeRepository employeeRepository, ChatRoomRepository chatRoomRepository, AttachmentRepository attachmentRepository) {
         this.messageLogRepository = messageLogRepository;
         this.employeeRepository = employeeRepository;
         this.chatRoomRepository = chatRoomRepository;
-        this.findRoomRepository = findRoomRepository;
+//        this.findRoomRepository = findRoomRepository;
         this.attachmentRepository = attachmentRepository;
     }
 
@@ -62,8 +62,6 @@ public class MessageLogService {
         return messageLogRepository.save(messageLog);
     }
 
-//    public List<Attachment> getFiles(String code){
-//
-//    }
+
 
 }

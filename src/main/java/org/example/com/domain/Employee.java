@@ -26,10 +26,6 @@ public class Employee {
     @Enumerated(EnumType.STRING)
     private Dept dept;
 
-    @OneToMany(fetch = FetchType.EAGER)
-    @JoinColumn(name = "employee_id")
-    @Builder.Default
-    private List<Sub> subs = new ArrayList<>();
     private String username;
     private String password;
     private String role;

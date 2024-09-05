@@ -36,10 +36,7 @@ public class EmployeeService {
                 .dept(Dept.Tech01)
                 .build();
 
-        if(employeeRepository.save(employee) == null){
-            log.error("사용자 생성 실패");
-        }
-        else log.info("사용자 생성 성공");
+        employeeRepository.save(employee);
     }
 
     // 아이디로 직원찾기

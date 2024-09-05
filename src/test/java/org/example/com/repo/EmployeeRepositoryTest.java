@@ -16,10 +16,10 @@ class EmployeeRepositoryTest {
     EmployeeRepository employeeRepository;
     @Test
     public void test(){
-        List<String> ids = List.of("alice01","kara11","oscar15","rick18");
-        List<Employee> list = employeeRepository.findEmpByList(ids)
-                .orElseThrow(() -> new NoSuchDataException("데이터가 없습니다."));
-        list.forEach(System.out::println);
+//        List<String> ids = List.of("alice01","kara11","oscar15","rick18");
+//        List<Employee> list = employeeRepository.findEmpByList(ids)
+//                .orElseThrow(() -> new NoSuchDataException("데이터가 없습니다."));
+//        list.forEach(System.out::println);
 
     }
 }

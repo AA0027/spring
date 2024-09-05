@@ -11,6 +11,11 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Builder
 @Entity
+@Table(uniqueConstraints = {
+        @UniqueConstraint(
+                columnNames={"code", "to_id"}
+        )
+})
 public class Invite {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

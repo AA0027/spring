@@ -2,7 +2,6 @@ package org.example.com.domain;
 
 import jakarta.persistence.*;
 import lombok.*;
-import org.example.com.repo.FindRoomRepository;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,9 +23,16 @@ public class ChatRoom {
     @Column(unique = true)
     private String code;
 
-    public static ChatRoom createRoom(String name){
+    @ManyToOne
+    private Employee creator;
+
+
+
+    public static ChatRoom createRoom(String name, Employee creator){
         return ChatRoom.builder()
                 .name(name)
+                .creator(creator)
+
                 .code((UUID.randomUUID().toString()).replaceAll("-",""))
                 .build();
     }
